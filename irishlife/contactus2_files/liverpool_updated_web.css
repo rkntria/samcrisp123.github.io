@@ -1,0 +1,103 @@
+/****
+*****
+***** CSS file for Liverpool by Etech 
+***** Creation Date: 22/08/19
+***** Recent Modification Date: 
+*****
+****/
+
+
+
+@font-face{
+    font-family: 'MuliBold';
+    src:url('https://assets.kampyle.com/clients/nebula/liverpool/Muli-Bold.ttf') format('truetype');
+}
+
+@font-face{
+    font-family: 'MuliLight';
+    src:url('https://assets.kampyle.com/clients/nebula/liverpool/Muli-Light.ttf') format('truetype');
+}
+
+@font-face{
+    font-family: 'MuliRegular';
+    src:url('https://assets.kampyle.com/clients/nebula/liverpool/Muli-Regular.ttf') format('truetype');
+}
+
+.neb-rating-html-implementation neb-rating .neb-rating.numbersSquare .neb-rating-value label.rating-label.selected,
+.neb-rating-html-implementation neb-rating .neb-rating.numbersSquare .neb-rating-value label.rating-label.on,
+.neb-rating-html-implementation neb-rating .neb-rating.numbersSquare .neb-rating-value label.rating-label.hover{
+    background: #178830;
+}
+
+strong, .control-label{
+    font-family: MuliBold;
+    color: #4A4A49 !important;
+}
+
+a,p span, #rightEdge, #leftEdge, .previewModal{
+    font-family: MuliLight !important;
+    color: #4A4A49 !important;
+}
+
+.fa-required{
+    color: #eb3924;
+}
+
+#rightEdge{
+    padding-right: 50px;
+}
+
+
+
+.thumbs md-radio-button{
+    margin-right: 40px !important;
+    margin-bottom: 20px !important;
+}
+
+.thumbs md-radio-button[value = 'Thumbs-Up'] ._md-container:before{
+    font-family:"FontAwesome" !important;
+    font-weight: 400 !important;
+    font-size: xx-large !important;
+    content:"\f164" !important;
+    color: #58595B;
+}
+
+.thumbs md-radio-button[value = 'Thumbs-Down'] ._md-container:before{
+    font-family:"FontAwesome" !important;
+    font-weight: 400 !important;
+    font-size:xx-large !important;
+    content:"\f165" !important;
+    color: #58595B;
+    
+}
+
+.thumbs md-radio-button[value = 'Thumbs-Up'].md-checked .md-ink-ripple:before{
+    color: #178830 !important;
+}
+
+.thumbs md-radio-button[value = 'Thumbs-Down'].md-checked .md-ink-ripple:before{
+    color: #EC111A !important;
+}
+
+.thumbs .neb-content md-radio-group div.radio md-radio-button ._md-on,
+.thumbs .neb-content md-radio-group div.radio md-radio-button ._md-off,
+.thumbs .neb-content md-radio-group div.radio md-radio-button ._md-label{
+    display: none !important;
+}
+
+.thumbs md-radio-group.md-focused .md-checked ._md-container:before {
+  left: 0px;
+  top: 0px;
+  right: 0px;
+}  
+
+.thumbs .neb-content md-radio-group.md-focused:not(:empty) .md-checked ._md-container:before{
+    background-color: unset !important;
+}
+
+#liveForm .kpl_builder .panel-footer .btn.submit-btn,
+#liveForm .kpl_builder .panel-footer .btn.cancel-btn,
+#liveForm .kpl_builder .panel-footer .btn{
+    border-radius: 50px;
+    width: 100px;
+}

@@ -1,0 +1,56 @@
+var clientId="unhfrd700k121ihe5e3q5tbasy5qoo1w";
+
+//Main page
+var redirectAfterLoginPage="/irishlife/main.html";
+
+
+//Navigation
+var navigation=[
+
+  {
+      "page":"contactus2.html",
+      "title":"HOME"
+  },
+
+  {
+      "page":"folder1.html",
+      "title":"MY DIGITAL LEGACY",
+      "boxId":"140240599367"
+  },
+  {
+      "page":"folder2.html",
+      "title":"MY POLICY DOCUMENTS",
+      "boxId":"140241113915"
+  },
+
+  {
+      "page":"preview2.html",
+      "title":"MY POLICY",
+      "boxId":"828104881922"
+  },
+  {
+    "page":"zipdownload.html",
+    "title":"DOWNLOAD ALL POLICY DOCUMENTS",
+    "boxId":"140241113915"
+},
+  {
+    "page":"move.html",
+    "title":"SHARE WITH IRISH LIFE",
+    "boxId":"140240599367",
+    "boxId2":"140246562570",
+  },
+  {
+      "page":"uploader.html",
+      "title":"UPLOADER",
+      "boxId":"140240599367"
+  },
+
+    {
+          "page":"search.html",
+          "title":"SEARCH",
+          "boxId":"102801900236",
+          "templateKey":"case",
+          "eid":"47757585"
+      }
+
+];

@@ -1,0 +1,56 @@
+var clientId="unhfrd700k121ihe5e3q5tbasy5qoo1w";
+
+//Main page
+var redirectAfterLoginPage="/lv/main.html";
+
+
+//Navigation
+var navigation=[
+
+  {
+      "page":"contactus2.html",
+      "title":"HOME"
+  },
+
+  {
+      "page":"folder1.html",
+      "title":"MY DIGITAL LEGACY",
+      "boxId":"129920884738"
+  },
+  {
+      "page":"folder2.html",
+      "title":"MY POLICY DOCUMENTS",
+      "boxId":"129922855540"
+  },
+
+  {
+      "page":"preview2.html",
+      "title":"MY POLICY",
+      "boxId":"765577217320"
+  },
+  {
+    "page":"zipdownload.html",
+    "title":"DOWNLOAD ALL POLICY DOCUMENTS",
+    "boxId":"129922855540"
+},
+  {
+    "page":"move.html",
+    "title":"SHARE WITH LV",
+    "boxId":"129920884738",
+    "boxId2":"129922855540",
+  },
+  {
+      "page":"uploader2.html",
+      "title":"UPLOADER",
+      "boxId":"129920884738"
+  },
+
+    {
+          "page":"search.html",
+          "title":"SEARCH",
+          "boxId":"102801900236",
+          "templateKey":"case",
+          "eid":"47757585"
+      }
+
+];
