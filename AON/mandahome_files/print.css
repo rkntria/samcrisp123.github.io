@@ -1,0 +1,15 @@
+body, ul, ol, li {
+	color: #000;
+}
+.right_bucket, #toplinks, #searchform, #header, .country_label, .footer {
+	display: none;
+}
+.print {
+	display: inline;
+}
+h1, h2, h3, h4, h5, h6 {
+	color: #000;
+}
+.right_bucket h1, .right_bucket h2, .right_bucket h3, .right_bucket h4, .right_bucket h5, .right_bucket h6 {
+	color: #000;
+}

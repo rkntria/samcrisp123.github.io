@@ -1,0 +1,225 @@
+$(document).ready(function ()
+{
+
+  setTimeout(
+    function() 
+    {
+      var element = $("a.EUFooterLink").css('display');
+console.log(element);
+if(element === 'flex'){
+  $("a.EUFooterLink").attr('style','display: inline !important')
+}
+
+var elementUS = $("a.USFooterLink").css('display');
+console.log(elementUS);
+if(elementUS === 'flex'){
+  $("a.USFooterLink").attr('style','display: inline !important')
+}
+    }, 1000);
+
+
+
+var fullurl = window.location.href;
+var splits = fullurl.toUpperCase().split("/");
+if(jQuery.inArray("CANADA", splits) != -1)
+{
+   var mainlabel = 'Main Content';
+   var footerlabel = 'Footer';
+   if(jQuery.inArray("FR", splits) != -1)
+   {
+     $("html").attr("lang","fr");
+     mainlabel = 'Contenu principal';
+     footerlabel = 'Bas de page';
+
+     suburl = window.location.pathname;
+   lasturl = suburl.substring(suburl.lastIndexOf('/') + 1);
+   frenchurl = suburl.replace("fr/"+lasturl, lasturl);
+   //console.log(suburl.replace('canada/', 'canada/fr/'));
+   console.log(suburl.substring(suburl.lastIndexOf('/') + 1))
+   //subrurl.toLowerCase.split("/")
+   //var urlEnglish = $('.head_cty').find('a').attr('href',);
+   $('.head_cty').html('<a href="'+frenchurl +'">English</a> | <a href="'+suburl+'">French</a> <span class="country">Canada</span> <img alt="" height="11" src="/siteImages/countryflags/ca.gif" width="16">');
+  
+   }
+   else
+   {
+     $("html").attr("lang","en");
+
+   suburl = window.location.pathname;
+   lasturl = suburl.substring(suburl.lastIndexOf('/') + 1);
+   frenchurl = suburl.replace(lasturl, "fr/"+lasturl);
+   console.log(suburl.replace('canada/', 'canada/fr/'));
+   console.log(suburl.substring(suburl.lastIndexOf('/') + 1))
+   //subrurl.toLowerCase.split("/")
+   //var urlEnglish = $('.head_cty').find('a').attr('href',);
+   $('.head_cty').html('<a href="'+suburl +'">English</a> | <a href="'+frenchurl+'">French</a> <span class="country">Canada</span> <img alt="" height="11" src="/siteImages/countryflags/ca.gif" width="16">');
+  
+
+   }
+   
+   
+   if ( $( "#bannerImg" ).length ) {
+  // $( ".full #bannerImg" ).after("<div class='scroller'><a class='scrollto' targetcontent='.footer'>" + footerlabel +"</a><a class='scrollto' targetcontent='.ContentBody'>" + mainlabel +"</a></div>");
+      $( "#global-header-block" ).prepend("<span><a class='scrollto' targetcontent='.add_img_1'>" + mainlabel +"</a></span>");
+    
+    }else {
+      if ($("#global-header-block").length ) {
+        $( "#global-header-block" ).prepend("<span><a class='scrollto' targetcontent='.content'>" + mainlabel +"</a></span>");
+     }
+
+    }
+  //  if ($(".carousel").length ) {
+  //     $( ".carousel" ).after("<div class='scroller'><a class='scrollto' targetcontent='.footer'>" + footerlabel +"</a><a class='scrollto' targetcontent='.ContentBody'>" + mainlabel +"</a></div>");
+  //  }
+  //  if(!($(".scroller").length )){
+  //     $(".full:first").prepend("<div class='scroller'><a class='scrollto' targetcontent='.footer'>" + footerlabel +"</a><a class='scrollto' targetcontent='.ContentBody'>" + mainlabel +"</a></div>");
+  //  }	
+   
+    // if ($("#global-header-block").length ) {
+    //    $( "#global-header-block" ).prepend("<span><a class='scrollto' targetcontent='.content'>" + mainlabel +"</a></span>");
+    // }
+  
+   $(".scrollto").click(function ()
+   {
+      var $container = $("html,body");
+      var target = $(this.getAttribute('targetcontent'));
+      var $scrollTo = $(target);
+      $container.animate({scrollTop: $scrollTo.offset().top - $container.offset().top + $container.scrollTop(), scrollLeft: 0},300);
+   });
+   $("#primary-navigation").attr("role","navigation");
+   $(".nav_prod").attr({"aria-haspopup":"true","aria-expanded":"false"});
+   $(".nav_about").attr({"aria-haspopup":"true","aria-expanded":"false"});
+   $( ".nav_prod, .nav_about" ).hover(
+    function() {
+      $( this ).attr("aria-expanded","true");
+    }, function() {
+      $( this ).attr("aria-expanded","false");
+    }
+  );
+   $("ul.menu").attr("role","menu");
+   $("ul.col").attr("role","menu");
+   $("ul.navigation").attr("role","navigation");
+   $("ul.navigation > li").attr("role","menuitem");
+   $("ul.tertiaryView").attr("role","navigation");
+   $("ul.tertiaryView > li").attr("role","menuitem");
+   $("ul[role='menu'] > li").attr("role","menuitem");
+   var style = document.createElement('style');
+   style.type = 'text/css';
+   style.innerHTML = '.scrollto { float:right; padding-right:10px; cursor:pointer;  color: #4d4f53;font-weight: 400 !important;font-size: 11px; line-height: 15px; font-family: Arial, Helvetica, sans-serif } .scrollto:hover {color: #5988b1; text-decoration: none; text-decoration: underline;} .scroller {width:100% ; padding: 10px 0 20px 10px;}'; 
+   document.getElementsByTagName('head')[0].appendChild(style);
+   $("#bannerImg").attr({"aria-label":"carousel","role":"carousel"});
+   $("#progbox_holder").children('span').each(function(index) {
+    
+    $(this).attr("aria-label", index + 1);
+  });
+  
+ 
+}
+//if(jQuery.inArray("PASSOWORD", splits) != -1){
+if(jQuery.inArray("PASSWORDFOLDER", splits) != -1){
+
+ 
+
+
+  $('#overlay').modal({
+    backdrop: 'static',   // This disable for click outside event
+    keyboard: true        // This for keyboard event
+})
+
+$('#overlay').modal('show');
+
+
+$("body").removeAttr("style");
+
+  $('#exampleInputPassword1').keypress(function(event) {
+         
+    if (event.keyCode == 13) {
+        
+
+      getPassword();
+    }
+});
+
+
+function getPassword(){
+
+  password  = $.trim($("#exampleInputPassword1").val());
+  suburl = window.location.pathname;
+ lastURl = suburl.substring(suburl.lastIndexOf('/') + 1);
+
+  if(password == "" || password == null){
+
+      alert("No inputed password")
+  }else{
+    var passwordData = new Object();
+    passwordData.passwordSet = password; 
+    passwordData.url = window.location.href; 
+    console.log(passwordData + "aler");
+    $.ajax({
+    //  url: "http://authoring.aon.com/rest/customTableItem.customtable.urlpass?Where=password='" + password + "'&format=json",
+     // url: "https://prod-aon-com-2018.azurewebsites.net/rest/customTableItem.customtable.experts10?Where=(First_Name like '%" + search_word + "%' or Last_Name like '%" + search_word + "%' or Title like '%" + search_word + "%' or Department like '%" + search_word + "%' or Email_Address like '%" + search_word + "%' or Practice_Area_Keywords like '%" + search_word + "%'  or Subject_Matter_Keywords like '%" + search_word + "%'  or Location_Based_Keywords_Address like '%" + search_word + "%' or Location_Based_Keywords_State_Country like '%" + search_word + "%' or Location_Based_Keywords_Location1_Region like '%" + search_word + "%' or Search_Card_Biography like '%" + search_word + "%') " + url + url_emea + url_practice + "&orderby=Tier ASC&orderby=Last_Name ASC&format=json",
+    // url: "https://localhost:5001/passwordsecureapi/sendpassword", 
+   //  url: "https://pfm-qa-api-asc.aon.net/password/api/Account/AddExternalLogin", 
+
+     url: "https://pfm-qa-api-asc.aon.net/password/api/values", 
+    //  headers: {
+    //      "Authorization": "Basic " + btoa("isachar.yves.silva@aon.com" + ":" + "")
+    //       //"Authorization": "Basic " + btoa("isachar.yves.p.silva@accenture.com" + ":" + "isachar123")
+    //   },
+    type: "POST",
+    data : '{"passwordSet":"'+ password+'","url":"'+lastURl+'"}',
+    contentType: 'application/json; charset=utf-8',
+      success: function(data) {
+          console.log(data);
+          
+
+          if(data === 'true'){
+            $('#overlay').modal('hide');
+            $("body").removeClass("modal-backdrop");
+          }else{
+
+           // window.location.replace('http://authoring.aon.com/passwordfolder/test3-(1).aspx');
+          }
+          // temp_array = [];
+          // var search_results = data.customTableItem_customtable_urlpasses[0].customtable_urlpass;
+ 
+          // if (data.customTableItem_customtable_urlpasses[0]['customtable_urlpass']) {
+          //    //  for (var i = 0; i < search_results.length; i++) {
+          //    //      console.log(search_results[i]);
+ 
+               
+          //    //  }
+ 
+          //    console.log( search_results[0].url);
+            
+ 
+          //    var fullurl = window.location.href;
+          //    var splits = fullurl.toUpperCase().split("/");
+          //    console.log( splits + "time");
+          //    if(jQuery.inArray(search_results[0].url.toUpperCase(), splits) != -1){
+ 
+          //      $('#overlay').modal('hide');
+          //      $("body").removeClass("modal-backdrop");
+          //    }else{
+          //     window.location.replace('http://authoring.aon.com/passwordfolder/test3-(1).aspx');
+          //    }
+            
+             
+          // }else{
+ 
+          //  window.location.replace('http://authoring.aon.com/passwordfolder/test3-(1).aspx');
+          // }
+ 
+ 
+      }
+  });
+ 
+   
+    
+  }
+
+  
+}
+
+}
+});

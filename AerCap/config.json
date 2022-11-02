@@ -1,0 +1,69 @@
+var clientId="unhfrd700k121ihe5e3q5tbasy5qoo1w";
+
+//Main page
+var redirectAfterLoginPage="/Aercap/main.html";
+
+//Navigation
+var navigation=[
+
+  {
+      "page":"readme.html",
+      "title":"README"
+  },
+
+  {
+      "page":"folder1.html",
+      "title":"ALL FILES",
+      "boxId":"151376264633"
+  },
+  {
+      "page":"folder1.html",
+      "title":"SHARED WITH ME",
+      "boxId":"151375784180"
+  },
+
+  {
+      "page":"preview1.html",
+      "title":"PREVIEW",
+      "boxId":"797741954625"
+  },
+
+  {
+    "page":"zipdownload.html",
+    "title":"ZIP DOWNLOADER",
+    "boxId":"0"
+},
+  {
+    //Templates - https://peter-demo.box.com/s/6uu9k93otq9f53s8stsm4tusbxai48aq
+    "page":"signrequest.html",
+    "title":"SIGNATURE REQUESTS",
+    "boxId":"142214602038",
+    "targetFolderId":"142215743547",
+  },
+
+
+
+  {
+      "page":"https://antaeus.app.box.com/f/aed2bb13f55e49c49688573a3f3fb606",
+      "title":"UPLOAD CONTRACT DOCUMENTS"
+  },
+  {
+      "page":"mdq.html",
+      "title":"METADATA VIEW",
+      "boxId":"151372481451",
+      "eid":"186950657",
+      "template":"udgContracts",
+      "columns":"contractNumber,transactionNumber,clientName,documentClass,dateApproved",
+      "filters":"clientName,documentClass",
+      "clientName":"Boeing,AerLingus,AeroMexico"
+  },
+  {
+      "page":"map_folder.html",
+      "title":"MAP",
+      "boxId":"81642016647",
+      "latitude":51.152899277243236,
+      "longitude":0.8391592693839822,
+      "zoomLevel":10
+    }
+
+];

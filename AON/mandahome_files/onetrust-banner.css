@@ -1,0 +1,9 @@
+div#onetrust-banner-sdk {
+ 
+ display: block;
+ 
+}
+
+.banner-hide div#onetrust-banner-sdk{
+ display: none !important;
+}

@@ -1,0 +1,1376 @@
+﻿var mailForm="email_form.html";
+var mailCountry="email";
+if(!confForm){
+	var confForm="email_conf.html";	
+}
+
+function startUp(){	
+	setNavigation();
+	setLowerNavigation();	
+	formFunctions();
+	goToPrint();
+	if($("#countries").length>0){
+		setupCountries();
+	}
+	if($('.bottom_bucket.expand').length>0){
+		BUHideLinks();	
+	}
+	if($('.bottom_bucket .heading h2').length>0){
+		setHeight();
+	}
+	if($("#contact").length > 0) {
+		showContact();
+	}
+	if($('.subnavmenu').length>0){
+		setBottomNav();
+	}
+	if($('#findform').length>0){
+		//document.forms.findform.reset();
+	}
+}
+//set up header mouseovers on every page
+function setNavigation(){	
+	//world mpa hover state on/off
+	$('.nav_worldwide>a').mouseover(function(){
+		$('#gmap').attr({
+			src: "/siteImages/nav_map_on.gif"
+		});
+	$('.nav_worldwide>a').mouseout(function(){
+		if($('.nav_worldwide.on>a').length==0){		
+			$('#gmap').attr({
+				src: "/siteImages/nav_map_off.gif"
+			});
+		}
+		});
+	});	
+	if($('.nav_worldwide.on>a').length>0){
+		$('#gmap').attr({
+			src: "/siteImages/nav_map_on.gif"
+		});
+	}
+	//set up global navigation rollovers
+    var navRoot;
+	var node='';
+	var tempClassName='';
+	var leftPosition=0;
+	var topPosition=0;
+    navRoot=$('#global_menu');
+	$(navRoot).children('li').mouseover(function(){
+		tempClassName=this.className;
+		if(tempClassName.indexOf('over')==-1){
+			$(this).addClass('over');	
+			if($(this).children('ul:first').length>0){
+				node=$(this).children('ul:first')[0];
+				//if its IE > 7 hide select boxes on mouseovers
+				 if (navigator.appName == "Microsoft Internet Explorer" && (!window.XMLHttpRequest)){
+					leftPosition = 0;
+					topPosition = 0;
+					hideShowSelectBox(findGlobalPosX(node),findGlobalPosY(node),node.offsetWidth,node.offsetHeight); 
+				 }
+			}
+		}
+	}).mouseout(function(){
+		$(this).removeClass('over');	
+		showAllSelectBoxes();
+	});;
+	//call function to fire Choose Language mouseover
+	showLanguage();
+	//set up all button elements to do form submits
+	$("button").click(function(){$(this).parent().submit()});
+}
+//called in setNavigation() to find position of menues and select boxes for IE < 7 show/hide
+function findGlobalPosX(obj) {
+    var curleft = 0;
+    if (obj.offsetParent) {
+        while (obj.offsetParent) {
+            curleft += obj.offsetLeft;
+            obj = obj.offsetParent;
+        }
+    } else if (obj.x) {
+        curleft += obj.x;
+    }
+    return curleft;
+}
+//called in setNavigation() to find position of menues and select boxes for IE < 7 show/hide
+function findGlobalPosY(obj) {
+    var curtop = 0;
+    if (obj.offsetParent) {
+        while (obj.offsetParent) {
+            curtop += obj.offsetTop;
+            obj = obj.offsetParent;
+        }
+        curtop += 1;
+    } else if (obj.y) {
+        curtop += obj.y;
+    }
+    return curtop;
+}
+//function called in setNavigation() to hide/show select boxes
+function hideShowSelectBox(menuLeftPos,menuTopPos,menuWidth,menuHeight){	
+    for(slectLoop2=0;slectLoop2<document.getElementsByTagName("select").length;slectLoop2++){		
+        var tempSelectY = findGlobalPosY(document.getElementsByTagName("select")[slectLoop2]);
+        var tempSelectX = findGlobalPosX(document.getElementsByTagName("select")[slectLoop2]);
+        var tempSelectWidth = document.getElementsByTagName("select")[slectLoop2].offsetWidth;
+        var tempSelectHeight = document.getElementsByTagName("select")[slectLoop2].offsetHeight;
+        if((tempSelectY <= menuTopPos + menuHeight && tempSelectY + tempSelectHeight >= menuTopPos ) && ((tempSelectX <= menuLeftPos && menuLeftPos <= (tempSelectWidth + tempSelectX)) || ((menuLeftPos <= tempSelectX) && (menuLeftPos + menuWidth > tempSelectX)))){
+            document.getElementsByTagName("select")[slectLoop2].style.visibility = 'hidden';
+        }else{
+            document.getElementsByTagName("select")[slectLoop2].style.visibility = 'visible';
+        }
+    }
+}
+//function called in setNavigation() to show all select boxes when global nav is moused off of
+function showAllSelectBoxes(){
+	if (navigator.appName == "Microsoft Internet Explorer" && (!window.XMLHttpRequest)){
+		for(j=0;j<document.getElementsByTagName("select").length;j++){				
+			document.getElementsByTagName("select")[j].style.visibility = 'visible';
+		}
+	}
+}
+//function to set up the three-tiered Products and Services menu
+function setLowerNavigation(){
+	var lowerRoot='';
+	var lnode='';
+	var targetUL=$('#link_series');
+	var ulToLoad;
+	var ulNew;
+	if($('#link_category>ul>li.selected')){
+		ulToLoad=$('#link_category>ul>li.selected').children('ul');
+		$(targetUL).empty();
+		$(ulToLoad).clone().appendTo($(targetUL));
+	}
+	lowerRoot = $('#link_category>ul:first');
+	for(j=0;j<lowerRoot.children('li').length;j++){
+		lnode=lowerRoot.children('li')[j];
+		lnode.onmouseover=function(){
+			removeStyle();
+			$(this).addClass('selected');
+			ulNew=$(this).children('ul');
+			$(targetUL).empty();
+			$(ulNew).clone().appendTo($(targetUL));
+		}
+	}
+}
+//this function shows the Languages div in the footer on rollover
+function showLanguage(){
+	if($("#lang_main").length>0){
+		$("#lang_main").mouseover(function(){
+			$("#lang_holder").css("display","inline");										   
+		}).mouseout(function(){
+			$("#lang_holder").css("display","none");	
+		});
+	}	
+}
+//function called in setLowerNavigation() to remove all .selected styles from links on new mouseover
+function removeStyle(){
+	var lowerRoot;
+	var lnode;
+	if($('#prod_list')){
+		lowerRoot = $('#link_category>ul:first');
+		for(var j=0;j<lowerRoot.children('li').length;j++){
+			lnode=lowerRoot.children('li')[j];
+			$(lnode).removeClass('selected');
+		}
+	}
+}
+//function used only when there is a #countries table to setup mouseover events on the table rows
+function setupCountries(){
+	var theRow;
+	var firstCell;
+	var secondCell;
+	theRow=$("#countries");
+	$("#countries tr").mouseover(function(){
+		$(this).addClass("rowOver1");
+		firstCell=$(this).children('td')[0];
+		secondCell=$(this).children('td')[1];
+		$(firstCell).addClass("rowOver1");
+		$(secondCell).addClass("rowOver2");
+	}).mouseout(function(){
+		$(firstCell).removeClass("rowOver1");
+		$(secondCell).removeClass("rowOver2");
+	});
+}
+//function to show/hide links in business unit page if more/less than 3 available
+function BUHideLinks(){
+	var linkText;
+	var thisLI;
+	var appendLink;
+	var numExpands=1;
+	var theExpands;
+	var theNum=0;
+	if($('.bottom_bucket.expand').length>0){
+		numExpands = $('.bottom_bucket.expand').length;
+		theExpands = $('.bottom_bucket.expand');
+		jQuery.each($('.bottom_bucket.expand'),function(){
+			linkSpan=$(this).find('.view_link:first');
+			linkText=$(this).find('.view_link:first>a');
+			theNum++;
+			var thisElement=($(this).children('ul:first'));
+			var numLIs=$(thisElement).children('li').length;
+			if(numLIs>20){
+				//first, loop through all items > 3 and hide them
+				for(var l=20;l<numLIs;l++){
+					thisLI = $(thisElement).children('li')[l];
+					$(thisLI).hide();
+				}
+				//add hidden links for other states
+				appendLink="<span class='view_link' id='hideLink"+theNum+"'><img src='/siteImages/lg_arrow.gif' width='5' height='9' alt='' /><a href='#'>"+hideText+"</a></span><span class='view_link' id='allLink"+theNum+"'><img src='/siteImages/lg_arrow.gif' width='5' height='9' alt='' /><a href='"+allLink[theNum]+"'>"+allText+"</a></span>"
+				$(appendLink).appendTo(this);
+				$("#hideLink"+theNum).hide();
+				$("#allLink"+theNum).hide();
+				//change text to 'view more'
+				linkText.html(moreText);
+				linkText.attr("href","#");
+				linkSpan.attr("id","moreLink"+theNum);
+			} else {
+				linkText.html(allText);	
+			}
+			$(this).children("span[id^='moreLink']").click(function(){
+				for(var l=20;l<10;l++){
+					thisLI=$(thisElement).children('li')[l];
+					if(thisLI){
+						$(thisLI).show();
+					}
+				}
+				$(this).hide();
+				$(this).parent('div').children("span[id^='hideLink']").show();
+				if(numLIs>20){
+					$(this).parent('div').children("span[id^='allLink']").show();
+				}
+			});
+			$(this).children("span[id^='hideLink']").click(function(){					 
+				for(var l=20;l<numLIs;l++){
+				thisLI = $(thisElement).children('li')[l];
+					if(thisLI){
+						$(thisLI).hide();
+					}
+				}
+				$(this).parent('div').children("span[id^='hideLink']").hide();
+				$(this).parent('div').children("span[id^='allLink']").hide();
+				$(this).parent('div').children("span[id^='moreLink']").show();
+			});
+		});
+	}
+}
+//function is called inline when a select box is supposed to enable/disable related select boxes
+function dropSense(sel) { 
+	var selected = $(sel).val(); 
+	if (selected != "") { 
+		$(sel).next('select').removeAttr('disabled'); 
+		updateCategories();
+	} else { 
+		$(sel).next('select').val("").attr("disabled", true);
+	}
+	
+}
+
+function dropSenseString(sel) { 
+	var selected = sel; 
+	alert (sel)
+	
+	if (selected != "") { 
+		$(sel).next('select').removeAttr('disabled'); 
+		updateCategories();
+	} else { 
+		$(sel).next('select').val("").attr("disabled", true);
+	}
+	
+}
+
+//function hides/shows the Request More Info form
+function showContact(){
+	//contact display none unless RMI1 (confirmation)
+	if(location.href.indexOf("status=RMI1")==-1){
+		$("#contact").css("display","none");
+	}
+	
+	$("#closeform").show();
+	$("#submit").hide();
+	//set up expand click to open form, show buttons
+	$("#expand").click(function(){
+		$("#contact").animate({height: "show"});
+		$("#expand").css("visibility","hidden");
+		$("#submit").show();
+		leadOpen(this,'Request More Info');
+	});
+	//set up close click to close form, hide buttons
+	$("#closeform").click(function(){
+		$("#contact").animate({height: "hide"});	
+		$("#submit").hide();
+		$("#expand").css("visibility","visible");
+		leadClose(this,'Request More Info');
+	});
+
+	//handle return from reCAPTCHA server-side validation error. Repopulate form fields
+	//with their values other than the recaptcha response
+	if(location.href.indexOf("captchaerror=2")!=-1){
+		if($("#contact").length>0){
+			$("#contact").css("display","inline");
+			$("#expand").hide();
+			$("#closeform").show();
+			$("#submit").show();
+			$("#recaptcha_label").addClass("error");
+			
+			var formAry=new Array('FirstName','LastName','Title','EmailAddress','Company','BusPhone','ABN','Country','State','SComments1');
+			var fieldAry=new Array(document.cform.C_FirstName, document.cform.C_LastName, document.cform.C_Title, document.cform.C_EmailAddress, document.cform.C_Company, document.cform.C_BusPhone, document.cform.ABN, document.cform.C_Country, document.cform.C_State, document.cform.C_Comments1);
+			for(q=0;q<formAry.length;q++){
+				if(getQueryVariables(formAry[q])){
+					fieldAry[q].value=getQueryVariables(formAry[q]);
+				}
+			}								
+
+		}
+	}
+
+	//set pageTitle and Address appropriately and attach them to for hidden fields
+	var pageTitle = document.title;
+	var pageAddr = location.href + "?status=RMI1";
+	document.cform.rpagetitle.value = pageTitle;
+	document.cform.rpageaddress.value = pageAddr;	
+}
+//validation called for Request More Info form
+function validateForm() {
+	document.getElementById("emailerr").style.display="none";		
+	var willReturn = 1;
+	//required fields
+	var reqAry=new Array(7)
+	for (i=0; i <7; i++)
+	reqAry[i]=new Array(2)
+	reqAry[0][0] = document.cform.C_FirstName.value;
+	reqAry[0][1] = document.getElementById("fnamelabel");
+	reqAry[1][0] = document.cform.C_LastName.value;
+	reqAry[1][1] = document.getElementById("lnamelabel");
+	reqAry[2][0] = document.cform.C_Title.value;
+	reqAry[2][1] = document.getElementById("titlelabel");
+	reqAry[3][0] = document.cform.C_EmailAddress.value;
+	reqAry[3][1] = document.getElementById("emaillabel");
+	reqAry[4][0] = document.cform.C_Company.value;
+	reqAry[4][1] = document.getElementById("companylabel");
+	reqAry[5][0] = document.cform.C_BusPhone.value;
+	reqAry[5][1] = document.getElementById("phonelabel");
+	reqAry[6][0] = document.cform.C_Country.value;
+	reqAry[6][1] = document.getElementById("countrylabel");
+	for(i=0; i<reqAry.length; i++){
+		if(reqAry[i][0]==null||reqAry[i][0]==""){
+			reqAry[i][1].className="error";
+			willReturn = 0;
+		} else {
+			reqAry[i][1].className="";	
+		}
+	}
+	if(willReturn==0){
+		return false;
+	} else {
+		if(validate_email(reqAry[3][0])==true){
+			completeLead();
+			return true;
+		} else {
+			document.getElementById("emailerr").style.display="inline";	
+			return false;
+		}
+	}
+}
+
+//validation called for Request More Info form including Recaptcha
+function validateFormRecaptcha() {
+	document.getElementById("emailerr").style.display="none";		
+	var willReturn = 1;
+	//required fields
+	var reqAry=new Array(8)
+	for (i=0; i <8; i++)
+	reqAry[i]=new Array(2)
+	reqAry[0][0] = document.cform.C_FirstName.value;
+	reqAry[0][1] = document.getElementById("fnamelabel");
+	reqAry[1][0] = document.cform.C_LastName.value;
+	reqAry[1][1] = document.getElementById("lnamelabel");
+	reqAry[2][0] = document.cform.C_Title.value;
+	reqAry[2][1] = document.getElementById("titlelabel");
+	reqAry[3][0] = document.cform.C_EmailAddress.value;
+	reqAry[3][1] = document.getElementById("emaillabel");
+	reqAry[4][0] = document.cform.C_Company.value;
+	reqAry[4][1] = document.getElementById("companylabel");
+	reqAry[5][0] = document.cform.C_BusPhone.value;
+	reqAry[5][1] = document.getElementById("phonelabel");
+	reqAry[6][0] = document.cform.C_Country.value;
+	reqAry[6][1] = document.getElementById("countrylabel");
+	reqAry[7][0] = document.cform.recaptcha_response_field.value;
+	reqAry[7][1] = document.getElementById("recaptcha_label");
+
+	for(i=0; i<reqAry.length; i++){
+		if(reqAry[i][0]==null||reqAry[i][0]==""){
+			reqAry[i][1].className="error";
+			willReturn = 0;
+		} else {
+			reqAry[i][1].className="";	
+		}
+	}
+	if(willReturn==0){
+		return false;
+	} else {
+		if(validate_email(reqAry[3][0])==true){
+			completeLead();
+			return true;
+		} else {
+			document.getElementById("emailerr").style.display="inline";	
+			return false;
+		}
+	}
+}
+
+//function called to validate Email to a Friend form
+function validateEmailForm() {
+	document.getElementById("emailtoerr").style.display="none";
+	document.getElementById("emailfromerr").style.display="none";
+	var willReturn = 1;
+	//required fields
+	var reqAry=new Array(4)
+	for (i=0; i <4; i++)
+	reqAry[i]=new Array(2)
+	reqAry[0][0] = document.eform.C_To_Email_Address1.value;
+	reqAry[0][1] = document.getElementById("emailtolabel");
+	reqAry[1][0] = document.eform.C_From_Email_Address1.value;
+	reqAry[1][1] = document.getElementById("emailfromlabel");
+	reqAry[2][0] = document.eform.C_Subject1.value;
+	reqAry[2][1] = document.getElementById("emailsubjlabel");
+	reqAry[3][0] = document.eform.recaptcha_response_field.value;
+	reqAry[3][1] = document.getElementById("recaptcha_label");
+	for(i=0; i<reqAry.length; i++){
+		if(reqAry[i][0]==null||reqAry[i][0]==""){
+			reqAry[i][1].className="error";
+			willReturn = 0;
+		} else {
+			reqAry[i][1].className="";	
+		}
+	}
+	if(willReturn==0){
+		return false;
+	} else {
+		if(validate_email(reqAry[0][0])==false){
+			document.getElementById("emailtoerr").style.display="inline";	
+			return false;
+		} else if(validate_email(reqAry[1][0])==false) {
+			document.getElementById("emailfromerr").style.display="inline";	
+			return false;
+		} else {
+			return true;	
+		}
+	}
+}
+//called in validateForm() and validateEmailForm()
+function validate_email(value) {
+	with (value) {
+		apos=value.indexOf("@");
+		dotpos=value.lastIndexOf(".");
+		if (apos<1||dotpos-apos<2) {
+		  	return false;
+		} else {
+			return true;
+		}
+	}
+}
+//this is called when opening the email form via AJAX, to load the reCAPTCHA javascript
+//in IE this is necessary to avoid JS errors when the script has not already loaded
+function addScript(){
+	var script_ID='captcha_script';
+	var head=document.getElementsByTagName('head').item(0);
+	var scriptTag=document.getElementById(script_ID);
+	if(!scriptTag){
+		script=document.createElement('script');
+		script.src="http://api.recaptcha.net/js/recaptcha_ajax.js";
+		script.type='text/javascript';
+		script.id=script_ID;
+		head.appendChild(script);
+	}
+}	
+
+//this function calls the goToEmail() function with the appropriate parameter after calling loadScript()
+function showEmail(form){
+	addScript();
+	if(form=='conf') {
+		goToEmail('conf');
+	} else {
+		setTimeout("goToEmail('mail')",500);
+	}
+}
+//function called in showEmail to AJAX lod the email form or email confirmation onto the page
+function goToEmail(theForm){
+	if($("#email_holder").length>0){
+		$("#email_holder").show();	 
+	} else {
+		$("body").append("<div id='email_holder'></div>");
+		if(theForm=="conf"){
+			$("#email_holder").load(confForm, shimit);
+		} else {
+			if(mailForm!=""){
+				$("#email_holder").load(mailForm, pageInfo);
+			}
+		}
+	}
+	$("#emaillink").click(function(){return false;});	
+}
+//iframe shim for ie6
+function shimit(){
+	if (navigator.appName == "Microsoft Internet Explorer" && (!window.XMLHttpRequest)){	
+		if($("#shim").length==0){
+			shimmer=document.createElement('iframe');
+			shimmer.id="shim";
+			shimmer.style.height=$("#emailform").height()+30;
+			shimmer.setAttribute('frameborder','0');
+			shimmer.src="#";
+			$("body").append(shimmer);
+		} else {
+			shimmer.style.height=$("#emailform").height()+30;	
+		}
+		$("#shim").css("visibility","visible");
+	}
+}
+//removes email popup page from the page
+function hideEmail(){
+	if(document.getElementById("shim")){
+		var shimmer = document.getElementById("shim");
+		shimmer.style.visibility='hidden';
+	}
+	$("#email_holder").remove();
+	$("#emaillink").click(showEmail);
+}
+//function called in goToEmail to set up hidden fields, and add iframe shim technique if > IE7
+function pageInfo(){
+	var pageTitle = document.title;
+	var pageAddr = location.href;
+	if((pageAddr.charAt(pageAddr.length-1))=="#"){
+		pageAddr=pageAddr.substr(0,pageAddr.length-1);	
+	}
+	if(pageAddr.indexOf("?status=STF1")==-1){
+		pageAddr = pageAddr + "?status=STF1";
+	}
+	if(document.eform.PageTitle){
+		document.eform.PageTitle.value = pageTitle;
+	}
+	if(document.eform.C_Page_URL1){
+		document.eform.C_Page_URL1.value = pageAddr;
+	}
+	if (navigator.appName == "Microsoft Internet Explorer" && (!window.XMLHttpRequest)){	
+		if($("#shim").length==0){
+			shimmer=document.createElement('iframe');
+			shimmer.id="shim";
+			shimmer.style.height=$("#emailform").height();
+			shimmer.setAttribute('frameborder','0');
+			shimmer.src="#";
+			$("body").append(shimmer);
+		} else {
+			shimmer.style.height=$("#emailform").height();
+		}
+		$("#shim").css("visibility","visible");
+	}
+}
+//this function is called on page load to check the state of the forms on the page
+function formFunctions(){
+	//you can change this variable's text to display any "Thank you" text in any language
+	if($('#emaillink').length>0){
+		mailForm=$("#emaillink").attr("href");
+		mailCountry=mailForm.substr(0, mailForm.indexOf("_"));
+		confForm=mailCountry+"_conf.html";
+		$('#emaillink').attr("href","javascript:showEmail('mail');");	
+	}
+	var fullURL = location.href;
+	//show Send to Friend confirmation if STF1
+	if(fullURL.indexOf("status=STF1")!=-1 && $("#emaillink").length>0){
+		showEmail('conf');
+	}
+	//show Request More Info confirmation if RMI1
+	if($("#contact").length>0){
+		if(fullURL.indexOf("status=RMI1")!=-1){
+			if(!window.request_Conf){
+				request_Conf=email_Conf;
+				leadSubmit(this,'Request More Info');
+			}
+			$("#expand").css("display","none");
+			$(".required").hide();
+			$(".contactform").remove();
+			if($("#recaptcha").length>0){
+				$("#recaptcha").remove();
+			}
+			$("#submit").remove();
+			$("#contact").prepend("<div class='contactform'><p>"+request_Conf+"</p></div>");
+		}
+	}
+
+	//handle return from reCAPTCHA server-side validation error. Repopulate form fields
+	//with their values other than the recaptcha response
+	if(fullURL.indexOf("captchaerror=1")!=-1){
+		if($("#emaillink").length>0){
+			$("#emaillink").click(function(){return false;});
+			addScript();
+			$("body").append("<div id='email_holder'></div>");
+			$("#email_holder").load(mailForm, function(){
+				pageInfo();
+				var formAry=new Array('ToEmailAddress','FromEmailAddress','Subject','Message');
+				var fieldAry=new Array(document.eform.emailto, document.eform.emailfrom, document.eform.subject, document.eform.emailmsg);
+				for(q=0;q<formAry.length;q++){
+					if(getQueryVariables(formAry[q])){
+						fieldAry[q].value=getQueryVariables(formAry[q]);
+					}
+				}								
+				$("#recaptcha_label").addClass("error");
+			});
+		}
+	}
+
+	//for Popup Email form - get the value for C_Page_URL1, C_Main_Page_URL1
+	if($("#popupemailform").length>0){
+		pageInfo();
+		if(document.eform.C_Main_Page_URL1){
+			document.eform.C_Main_Page_URL1.value = getURLParam(window.location.href,'mainPageURL');
+		}
+	}
+	//for Popup Email form
+	//handle return from reCAPTCHA server-side validation error. Repopulate form fields
+	//with their values other than the recaptcha response
+	if(fullURL.indexOf("captchaerror=3")!=-1){
+		var formAry=new Array('ToEmailAddress','FromEmailAddress','Subject','Message');
+		var fieldAry=new Array(document.eform.emailto, document.eform.emailfrom, document.eform.subject, document.eform.emailmsg);
+		for(q=0;q<formAry.length;q++){
+			if(getQueryVariables(formAry[q])){
+				fieldAry[q].value=getQueryVariables(formAry[q]);
+			}
+		}								
+		$("#recaptcha_label").addClass("error");
+	}
+
+}
+//see if variable is defined
+function isDefined(object,variable){
+	return(typeof(eval(object)[variable])!='undefined');	
+}
+//called in formFunctions to parse/de-encode the querystring paramaters on a reCAPTCHA error response
+function getQueryVariables(variable) {
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+	var theAnswer;
+	for (var i=0;i<vars.length;i++) {
+		var pair = vars[i].split("=");
+		if (pair[0] == variable) {
+			theAnswer=decodeURIComponent(pair[1]);
+			return theAnswer.replace(/\+/g," ");
+		}
+	}
+}
+//About Aon subnav menu rollovers, show/hide states, etc
+function setBottomNav() {
+	$(".subnavmenu").children('li').children('ul').hide();
+	//this part adds/removes the blue arrow class on hovers
+	$(".subnavmenu").children('li').hover(function(){
+		if ($(this).hasClass("opened")) {
+			return true;
+		} else {
+			if($(this).children('ul').length>0){
+				$(this).addClass("open");		  
+			} else {
+				$(this).addClass("over");	
+			}
+		}
+	},function(){
+		if ($(this).hasClass("opened")) {
+			return true; 			  
+		} else {			  
+			$(this).removeClass("open");
+			$(this).removeClass("over");
+		}
+	});
+	//this part handles the click actions only if the LI/A being clicked ha a child UL of hidden elements
+	//otherwise, the link clicked will just take you to the href specified
+	$(".subnavmenu").children('li').children('a').click(function(){
+		if($(this).parent('li').children('ul').length>0){																	 
+			if ($(this).parent('li').hasClass("opened")) {
+				$(this).parent('li').children('ul').slideUp("slow");
+				$(this).parent('li').removeClass("open").removeClass("opened");			  
+			} else {
+				$(this).parent('li').children('ul').slideDown("slow");
+				$(this).parent('li').addClass("open").addClass("opened");
+			}
+		}
+	});
+}
+//this function is called in the Request More Info form to show/hide the city and state selects if a user chooses United States
+function hideState(sel) {
+	$("#C_State").hide(); 
+	$("#C_City").hide(); 	
+	var selected = $(sel).val(); 
+	if (selected=="us")
+		selected = "United States of America";
+	if ((selected == "United States of America")||(selected == "Mexico")) {
+		GetStateList(selected);
+		$("#statelabel").show();
+		$("#C_State").show(); 
+		$("#C_City").show(); 		 
+	} else { 
+		$("#statelabel").val("").hide();
+		$("#C_State").val("").hide();
+		$("#C_City").val("").hide();		
+	}  
+}
+
+function GetStateList(cou) {
+	var StateLabel = $("#countrylabel").html()=="Country*" ? "State" : "Estado";
+	if (cou=="Mexico")
+		{	
+		var StateArray = new Array("Aguascalientes","Baja California","Baja California Sur","Campeche","Chiapas","Chihuahua","Coahuila","Colima","Distrito Federal","Durango","Guanajuato","Guerrero","Hidalgo","Jalisco","Estado de México","Michoacán","Morelos","Nayarit","Nuevo León","Oaxaca","Puebla","Querétaro","Quintana Roo","San Luis Potosí","Sinaloa","Sonora","Tabasco","Tamaulipas","Tlaxcala","Veracruz","Yucatán","Zacatecas"); 
+		}
+	else if (cou=="United States of America")
+		{	
+		var StateArray = new Array("Alabama","Alaska","American Samoa","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Guam","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Northern Marianas Islands","Ohio","Oklahoma","Oregon","Pennsylvania","Puerto Rico","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Virgin Islands","Washington","West Virginia","Wisconsin","Wyoming");	
+		}
+
+//		window.alert($("#statelabel").html);
+	if ($("#statelabel").length) {
+		$("#statelabel").html(StateLabel);
+		}
+	else {
+		$("#C_State").before("<label for='state' id='statelabel'>" + StateLabel + "</label><br />");
+		}
+	document.cform.C_State.length	=	0; //Remove current options!!
+	document.cform.C_State.length	=	StateArray.length+1; //Remove current options!!
+	document.cform.C_State[0].text	=	"-- "+"Select a State"+" --"
+	for(var i=0; i<StateArray.length; i++)
+		document.cform.C_State[i+1].text=StateArray[i];
+	document.cform.C_State[0].selected=true;
+}
+
+
+//this function is called in the Request More Info form to show/hide the city and state selects if a user chooses United States
+function hideStateSpecific(sel,countryVal) {
+	$("#C_State").hide(); 
+	$("#C_City").hide(); 	
+	var selected = $(sel).val(); 
+	if (selected == countryVal) { 
+		$("#C_State").show(); 
+		$("#C_City").show(); 		 
+	} else { 
+		$("#C_State").val("").hide();
+		$("#C_City").val("").hide();		
+	}  
+}
+
+
+
+
+//function caleld to open popup window to print the page
+function printPage(loc) { 
+	printPages = window.open(loc,"babywindow","width=880,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizeable=0");
+	printPages.focus();
+}
+//show the print page if this is the print popup window
+//add URL to the bottom of the page
+function goToPrint() {
+	if (window.name == 'babywindow'){
+		if (navigator.appName != "Netscape"){
+			$('link:last').attr('media','')			
+		} else {
+			$('link:last').append("<link href='css/print.css' rel='stylesheet' type='text/css'/>");
+		}
+		$("#container").append("<strong>Find this content at: </strong>" + location.href);
+	}
+}
+function setHeight(){
+	$('.bottom_bucket h2').each(function(){
+		if($(this).height()<20){
+			$(this).css("padding-top",8);			 
+		}								 
+	});
+}
+
+function validateFormWithPrivacyCheck() {
+	document.getElementById("emailerr").style.display="none";
+	document.getElementById("privacyerr").style.display="none";	
+	var willReturn = 1;
+	//required fields
+	var reqAry=new Array(8)
+	for (i=0; i <8; i++)
+	reqAry[i]=new Array(2)
+	reqAry[0][0] = document.cform.C_FirstName.value;
+	reqAry[0][1] = document.getElementById("fnamelabel");
+	reqAry[1][0] = document.cform.C_LastName.value;
+	reqAry[1][1] = document.getElementById("lnamelabel");
+	reqAry[2][0] = document.cform.C_Title.value;
+	reqAry[2][1] = document.getElementById("titlelabel");
+	reqAry[3][0] = document.cform.C_EmailAddress.value;
+	reqAry[3][1] = document.getElementById("emaillabel");
+	reqAry[4][0] = document.cform.C_Company.value;
+	reqAry[4][1] = document.getElementById("companylabel");
+	reqAry[5][0] = document.cform.C_BusPhone.value;
+	reqAry[5][1] = document.getElementById("phonelabel");
+	reqAry[6][0] = document.cform.C_Country.value;
+	reqAry[6][1] = document.getElementById("countrylabel");
+	reqAry[7][0] = document.cform.C_privacy.checked;
+	reqAry[7][1] = document.getElementById("privacyerr");
+	
+	for(i=0; i<reqAry.length; i++){
+		if(reqAry[i][0]==null||reqAry[i][0]==""){
+			reqAry[i][1].className="error";
+			willReturn = 0;
+		} else {
+			reqAry[i][1].className="";	
+		}
+	}
+	if(reqAry[7][0]==false){
+		reqAry[7][1].className="error";
+		document.getElementById("privacyerr").style.display="inline";	
+		willReturn = 0;
+	} else{
+		reqAry[7][1].className="";	
+		document.getElementById("privacyerr").style.display="none";	
+	}
+	if(willReturn==0){
+		return false;
+	} else {
+		if(validate_email(reqAry[3][0])==true){
+			completeLead();
+			return true;
+		} else {
+			document.getElementById("emailerr").style.display="inline";	
+			return false;
+		}
+	}
+}
+
+function validateFormWithPrivacyCheckRecaptcha() {
+	document.getElementById("emailerr").style.display="none";
+	document.getElementById("privacyerr").style.display="none";	
+	var willReturn = 1;
+	//required fields
+	var reqAry=new Array(9)
+	for (i=0; i <9; i++)
+	reqAry[i]=new Array(2)
+	reqAry[0][0] = document.cform.C_FirstName.value;
+	reqAry[0][1] = document.getElementById("fnamelabel");
+	reqAry[1][0] = document.cform.C_LastName.value;
+	reqAry[1][1] = document.getElementById("lnamelabel");
+	reqAry[2][0] = document.cform.C_Title.value;
+	reqAry[2][1] = document.getElementById("titlelabel");
+	reqAry[3][0] = document.cform.C_EmailAddress.value;
+	reqAry[3][1] = document.getElementById("emaillabel");
+	reqAry[4][0] = document.cform.C_Company.value;
+	reqAry[4][1] = document.getElementById("companylabel");
+	reqAry[5][0] = document.cform.C_BusPhone.value;
+	reqAry[5][1] = document.getElementById("phonelabel");
+	reqAry[6][0] = document.cform.C_Country.value;
+	reqAry[6][1] = document.getElementById("countrylabel");
+	reqAry[7][0] = document.cform.C_privacy.checked;
+	reqAry[7][1] = document.getElementById("privacyerr");
+	reqAry[8][0] = document.cform.recaptcha_response_field.value;
+	reqAry[8][1] = document.getElementById("recaptcha_label");
+	
+	for(i=0; i<reqAry.length; i++){
+		if(reqAry[i][0]==null||reqAry[i][0]==""){
+			reqAry[i][1].className="error";
+			willReturn = 0;
+		} else {
+			reqAry[i][1].className="";	
+		}
+	}
+	if(reqAry[7][0]==false){
+		reqAry[7][1].className="error";
+		document.getElementById("privacyerr").style.display="inline";	
+		willReturn = 0;
+	} else{
+		reqAry[7][1].className="";	
+		document.getElementById("privacyerr").style.display="none";	
+	}
+	if(willReturn==0){
+		return false;
+	} else {
+		if(validate_email(reqAry[3][0])==true){
+			completeLead();
+			return true;
+		} else {
+			document.getElementById("emailerr").style.display="inline";	
+			return false;
+		}
+	}
+}
+
+function getURLParam(pageURL, strParamName){
+	var strReturn = "";
+	var strHref = pageURL;	//window.location.href;
+	if ( strHref.indexOf("?") > -1 ){
+		//var strQueryString = strHref.substr(strHref.indexOf("?")).toLowerCase();
+		var strQueryString = strHref.substr(strHref.indexOf("?"));
+		var aQueryString = strQueryString.split("&");
+		for ( var iParam = 0; iParam < aQueryString.length; iParam++ ){
+			//if (aQueryString[iParam].indexOf(strParamName.toLowerCase() + "=") > -1 ){
+			if (aQueryString[iParam].indexOf(strParamName + "=") > -1 ){
+				var aParam = aQueryString[iParam].split("=");
+				strReturn = aParam[1];
+				break;
+			}
+		}
+	}
+	return unescape(strReturn);
+}
+
+function startVideo(videoTitle)
+{
+ 	s.eVar12=videoTitle;
+ 	s.events="event8";
+ 	/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+	var s_code=s.t();if(s_code)document.write(s_code)//-->
+	<!-- End SiteCatalyst code version: H.17. -->
+
+}
+
+function stopVideo(videoTitle)
+{
+ 	s.eVar12=videoTitle;
+ 	s.events="event9";
+ 	/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+	var s_code=s.t();if(s_code)document.write(s_code)//-->
+	<!-- End SiteCatalyst code version: H.17. -->
+
+}
+
+
+
+
+/* Tabbed Panels2 */
+if (typeof window.onload == 'function') {fnOldLoad = window.onload;}
+window.onload = function()
+{
+  if (window.fnOldLoad) {fnOldLoad();}
+  xGetElementsByClassName('tabPanelGroup', document, 'div',
+    function(d) {
+      tpgLoad(d);
+    }
+  );
+}
+if (typeof window.onunload == 'function') {fnOldUnload = window.onunload;}
+window.onunload = function()
+{
+  if (window.fnOldUnload) {fnOldUnload();}
+  xGetElementsByClassName('tabPanelGroup', document, 'div',
+    function(d) {
+      tpgUnload(d);
+    }
+  );
+}
+function tpgLoad(tpg)
+{
+/*  tpg.style.height = '250px'; */ // don't want to do this in 'default' css
+  xGetElementsByClassName('linkDelim', tpg, 'span',
+    function(s) {
+      s.style.display = 'none';
+    }
+  );
+  tpg.tabs = [];
+  var tabs = xGetElementsByClassName('tabDefault', tpg, 'a',
+    function(a) {
+      a.onclick = tpgClick;
+      a.onfocus = tpgClick; // this one line adds support for keyboard navigation
+      a._TPG_ = tpg;
+      tpg.tabs[tpg.tabs.length] = a;
+    }
+  );
+  tabs[0].onclick();
+}
+function tpgClick()
+{
+  for (var i = 0; i < this._TPG_.tabs.length; ++i) {
+    this._TPG_.tabs[i].className = 'tabDefault';
+  }
+  this.className = 'tabSelected';
+  xGetElementsByClassName('tabPanel', this._TPG_, 'div',
+    function(ele) {
+      ele.style.display = 'none';
+    }
+  );
+  document.getElementById(this.hash.substr(1)).style.display = 'block';
+  return false;
+}
+function tpgUnload(tpg)
+{
+  for (var i = 0; i < tpg.tabs.length; ++i) {
+    tpg.tabs[i].onclick = null;
+    tpg.tabs[i] = null;
+  }
+  tpg.tabs = null;
+}
+function tpgSelect(tpgId, tabNum)
+{
+  var tpg, n = tabNum - 1;
+  tpg = document.getElementById(tpgId);
+  if (tpg && tpg.tabs) {
+    if (n >= 0 && n < tpg.tabs.length) {
+      tpg.tabs[n].onclick();
+    }
+  }
+}
+function xGetElementsByClassName(c,p,t,f)
+{
+  var r = new Array();
+  var re = new RegExp("(^|\\s)"+c+"(\\s|$)");
+  var e = p.getElementsByTagName(t);
+//  var e = xGetElementsByTagName(t,p); // See comments: http://cross-browser.com/x/lib/view.php?sym=xGetElementsByClassName
+  for (var i = 0; i < e.length; ++i) {
+    if (re.test(e[i].className)) {
+      r[r.length] = e[i];
+      if (f) f(e[i]);
+    }
+  }
+  return r;
+}
+
+
+
+/* Show-Hide Text Toggle */
+function toggle() {
+	var ele = document.getElementById("toggleText");
+	var text = document.getElementById("displayText");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "Read more...";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Less >>";
+	}
+} 
+
+/* Show-Hide Text Toggle - Privacy Statement - Full */
+function togglePS() {
+	var ele = document.getElementById("toggleTextPS");
+	var text = document.getElementById("displayTextPS");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "View the full text of our Privacy Statement";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Hide the full text of our Privacy Statement";
+	}
+}
+
+/* Show-Hide Text Toggle - Privacy Statement - Abbreviated */
+
+function togglePSA1() {
+	var ele = document.getElementById("toggleTextPSA1");
+	var text = document.getElementById("displayTextPSA1");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "Read More";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Hide the section above";
+	}
+}
+
+function togglePSA2() {
+	var ele = document.getElementById("toggleTextPSA2");
+	var text = document.getElementById("displayTextPSA2");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "Read More";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Hide the section above";
+	}
+}
+
+function togglePSA3() {
+	var ele = document.getElementById("toggleTextPSA3");
+	var text = document.getElementById("displayTextPSA3");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "Read More";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Hide the section above";
+	}
+}
+
+function togglePSA4() {
+	var ele = document.getElementById("toggleTextPSA4");
+	var text = document.getElementById("displayTextPSA4");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "Read More";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Hide the section above";
+	}
+}
+
+function togglePSA5() {
+	var ele = document.getElementById("toggleTextPSA5");
+	var text = document.getElementById("displayTextPSA5");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "Read More";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Hide the section above";
+	}
+}
+
+function togglePSA6() {
+	var ele = document.getElementById("toggleTextPSA6");
+	var text = document.getElementById("displayTextPSA6");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "Read More";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Hide the section above";
+	}
+}
+
+function togglePSA7() {
+	var ele = document.getElementById("toggleTextPSA7");
+	var text = document.getElementById("displayTextPSA7");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "Read More";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Hide the section above";
+	}
+}
+
+function togglePSA8() {
+	var ele = document.getElementById("toggleTextPSA8");
+	var text = document.getElementById("displayTextPSA8");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "Read More";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Hide the section above";
+	}
+}
+
+function togglePSA9() {
+	var ele = document.getElementById("toggleTextPSA9");
+	var text = document.getElementById("displayTextPSA9");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "Read More";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "Hide the section above";
+	}
+}
+$(function() {
+		$('.map').maphilight();
+	});
+
+/*Mapedit*/
+(function(G){var B,J,C,K,N,M,I,E,H,A,L;B=document.namespaces;J=!!document.createElement("canvas").getContext;if(!(J||B)){G.fn.maphilight=function(){return this};return }if(J){E=function(O){return Math.max(0,Math.min(parseInt(O,16),255))};H=function(O,P){return"rgba("+E(O.substr(0,2))+","+E(O.substr(2,2))+","+E(O.substr(4,2))+","+P+")"};C=function(O){var P=G('<canvas style="width:'+O.width+"px;height:"+O.height+'px;"></canvas>').get(0);P.getContext("2d").clearRect(0,0,P.width,P.height);return P};var F=function(Q,O,R,P,S){P=P||0;S=S||0;Q.beginPath();if(O=="rect"){Q.rect(R[0]+P,R[1]+S,R[2]-R[0],R[3]-R[1])}else{if(O=="poly"){Q.moveTo(R[0]+P,R[1]+S);for(i=2;i<R.length;i+=2){Q.lineTo(R[i]+P,R[i+1]+S)}}else{if(O=="circ"){Q.arc(R[0]+P,R[1]+S,R[2],0,Math.PI*2,false)}}}Q.closePath()};K=function(Q,T,U,X,O){var S,P=Q.getContext("2d");if(X.shadow){P.save();if(X.shadowPosition=="inside"){F(P,T,U);P.clip()}var R=Q.width*100;var W=Q.height*100;F(P,T,U,R,W);P.shadowOffsetX=X.shadowX-R;P.shadowOffsetY=X.shadowY-W;P.shadowBlur=X.shadowRadius;P.shadowColor=H(X.shadowColor,X.shadowOpacity);var V=X.shadowFrom;if(!V){if(X.shadowPosition=="outside"){V="fill"}else{V="stroke"}}if(V=="stroke"){P.strokeStyle="rgba(0,0,0,1)";P.stroke()}else{if(V=="fill"){P.fillStyle="rgba(0,0,0,1)";P.fill()}}P.restore();if(X.shadowPosition=="outside"){P.save();F(P,T,U);P.globalCompositeOperation="destination-out";P.fillStyle="rgba(0,0,0,1);";P.fill();P.restore()}}P.save();F(P,T,U);if(X.fill){P.fillStyle=H(X.fillColor,X.fillOpacity);P.fill()}if(X.stroke){P.strokeStyle=H(X.strokeColor,X.strokeOpacity);P.lineWidth=X.strokeWidth;P.stroke()}P.restore();if(X.fade){G(Q).css("opacity",0).animate({opacity:1},100)}};N=function(O){O.getContext("2d").clearRect(0,0,O.width,O.height)}}else{C=function(O){return G('<var style="zoom:1;overflow:hidden;display:block;width:'+O.width+"px;height:"+O.height+'px;"></var>').get(0)};K=function(P,S,T,W,O){var U,V,Q,R;U='<v:fill color="#'+W.fillColor+'" opacity="'+(W.fill?W.fillOpacity:0)+'" />';V=(W.stroke?'strokeweight="'+W.strokeWidth+'" stroked="t" strokecolor="#'+W.strokeColor+'"':'stroked="f"');Q='<v:stroke opacity="'+W.strokeOpacity+'"/>';if(S=="rect"){R=G('<v:rect name="'+O+'" filled="t" '+V+' style="zoom:1;margin:0;padding:0;display:block;position:absolute;left:'+T[0]+"px;top:"+T[1]+"px;width:"+(T[2]-T[0])+"px;height:"+(T[3]-T[1])+'px;"></v:rect>')}else{if(S=="poly"){R=G('<v:shape name="'+O+'" filled="t" '+V+' coordorigin="0,0" coordsize="'+P.width+","+P.height+'" path="m '+T[0]+","+T[1]+" l "+T.join(",")+' x e" style="zoom:1;margin:0;padding:0;display:block;position:absolute;top:0px;left:0px;width:'+P.width+"px;height:"+P.height+'px;"></v:shape>')}else{if(S=="circ"){R=G('<v:oval name="'+O+'" filled="t" '+V+' style="zoom:1;margin:0;padding:0;display:block;position:absolute;left:'+(T[0]-T[2])+"px;top:"+(T[1]-T[2])+"px;width:"+(T[2]*2)+"px;height:"+(T[2]*2)+'px;"></v:oval>')}}}R.get(0).innerHTML=U+Q;G(P).append(R)};N=function(O){G(O).find("[name=highlighted]").remove()}}M=function(P){var O,Q=P.getAttribute("coords").split(",");for(O=0;O<Q.length;O++){Q[O]=parseFloat(Q[O])}return[P.getAttribute("shape").toLowerCase().substr(0,4),Q]};L=function(Q,P){var O=G(Q);return G.extend({},P,G.metadata?O.metadata():false,O.data("maphilight"))};A=function(O){if(!O.complete){return false}if(typeof O.naturalWidth!="undefined"&&O.naturalWidth==0){return false}return true};I={position:"absolute",left:0,top:0,padding:0,border:0};var D=false;G.fn.maphilight=function(Q){Q=G.extend({},G.fn.maphilight.defaults,Q);if(!J&&G.browser.msie&&!D){document.namespaces.add("v","urn:schemas-microsoft-com:vml");var P=document.createStyleSheet();var O=["shape","rect","oval","circ","fill","stroke","imagedata","group","textbox"];G.each(O,function(){P.addRule("v\\:"+this,"behavior: url(#default#VML); antialias:true")});D=true}return this.each(function(){var W,T,a,S,V,X,Z,U,Y;W=G(this);if(!A(this)){return window.setTimeout(function(){W.maphilight(Q)},200)}a=G.extend({},Q,G.metadata?W.metadata():false,W.data("maphilight"));Y=W.get(0).getAttribute("usemap");S=G('map[name="'+Y.substr(1)+'"]');if(!(W.is("img")&&Y&&S.size()>0)){return }if(W.hasClass("maphilighted")){var R=W.parent();W.insertBefore(R);R.remove();G(S).unbind(".maphilight").find("area[coords]").unbind(".maphilight")}T=G("<div></div>").css({display:"block",background:'url("'+this.src+'")',position:"relative",padding:0,width:this.width,height:this.height});if(a.wrapClass){if(a.wrapClass===true){T.addClass(G(this).attr("class"))}else{T.addClass(a.wrapClass)}}W.before(T).css("opacity",0).css(I).remove();if(G.browser.msie){W.css("filter","Alpha(opacity=0)")}T.append(W);V=C(this);G(V).css(I);V.height=this.height;V.width=this.width;Z=function(f){var c,d;d=L(this,a);if(!d.neverOn&&!d.alwaysOn){c=M(this);K(V,c[0],c[1],d,"highlighted");if(d.groupBy){var b;if(/^[a-zA-Z][-a-zA-Z]+$/.test(d.groupBy)){b=S.find("area["+d.groupBy+'="'+G(this).attr(d.groupBy)+'"]')}else{b=S.find(d.groupBy)}var g=this;b.each(function(){if(this!=g){var h=L(this,a);if(!h.neverOn&&!h.alwaysOn){var e=M(this);K(V,e[0],e[1],h,"highlighted")}}})}if(!J){G(V).append("<v:rect></v:rect>")}}};G(S).bind("alwaysOn.maphilight",function(){if(X){N(X)}if(!J){G(V).empty()}G(S).find("area[coords]").each(function(){var b,c;c=L(this,a);if(c.alwaysOn){if(!X&&J){X=C(W.get());G(X).css(I);X.width=W.width();X.height=W.height();W.before(X)}c.fade=c.alwaysOnFade;b=M(this);if(J){K(X,b[0],b[1],c,"")}else{K(V,b[0],b[1],c,"")}}})});G(S).trigger("alwaysOn.maphilight").find("area[coords]").bind("mouseover.maphilight",Z).bind("mouseout.maphilight",function(b){N(V)});W.before(V);W.addClass("maphilighted")})};G.fn.maphilight.defaults={fill:true,fillColor:"000000",fillOpacity:0.4,stroke:true,strokeColor:"ffffff",strokeOpacity:1,strokeWidth:.5,fade:true,alwaysOn:false,neverOn:false,groupBy:false,wrapClass:true,shadow:false,shadowX:0,shadowY:0,shadowRadius:6,shadowColor:"000000",shadowOpacity:0.8,shadowPosition:"outside",shadowFrom:false}})(jQuery);
+//====================================================================//
+//MOBILE SUPPORT START HERE
+//====================================================================//
+//Doesn't support for IE <= 8
+var isIE_lessThan9 = false;
+if (!($.browser.msie  && parseInt($.browser.version, 10) <= 8)) {
+	var rst = 0;
+	var mobileSupport = true;
+	s_init();
+	}else{
+		var rst = 0; //Added to stop refresh in IE
+		isIE_lessThan9 = true;
+		$('link[href="/css/mobile.css"]').attr("disabled", "disabled");
+}
+$(window).resize(function(){
+	s_init();
+	
+});
+
+function s_init() {
+	mobileSupport = hasMobileSupport();
+	if($(window).width() <= 767){
+		if(mobileSupport){
+			$('link[href="/css/mobile.css"]').removeAttr("disabled");
+			mobilesite();
+		}else{
+			$('link[href="/css/mobile.css"]').attr("disabled", "disabled");
+		}
+	}
+	else{
+		desktop_site();
+	}
+}
+
+function hasMobileSupport(){
+	var mobileSupport = true;
+	var mainDir = window.location.pathname.split("/")[1];
+	//Check for exclude directory is exists in URL 
+	if(desktopOnlyURLs[mainDir] != undefined){
+		$(desktopOnlyURLs[mainDir]).each(function(i, val){
+			var excludeFile = desktopOnlyURLs[mainDir][i];
+			
+			if(excludeFile === "*"){//exclude mobile support for entire directory
+				mobileSupport = false;
+				return false;
+			}else if(excludeFile.match(/\/$/)){ //exclude mobile support only for default.jsp
+				var regEx = new RegExp(excludeFile+"$");
+				var regEx1 = new RegExp(excludeFile+"default.jsp$");
+				if(regEx.test(window.location.href) || regEx1.test(window.location.href)){
+					mobileSupport = false;
+					return false;
+				}
+			}else{ //exclude mobile support if exclude file immediately starts after the main directory in url
+				var excludeFile = excludeFile.replace("*", "");
+				var urlSubPath = window.location.pathname.replace(mainDir+"/", "");
+				if(urlSubPath.indexOf(excludeFile) === 1){
+					mobileSupport = false;
+					return false;
+				}
+			}
+		});
+}
+	return mobileSupport;
+}
+function mobilesite(){
+	if (sessionStorage.getItem("mycook") == 1){
+		mobileSupport = false;
+		$('link[href="/css/mobile.css"]').attr("disabled", "disabled");
+		return false;
+	}
+	if (rst == 1){
+		return false;
+	}
+    //custom html for mobile view
+  	$('.global_top').prepend( "<a class='mobilemenu'></a>" );
+  	$('#header').prepend("<div class='drowclose'><a></a></div>");
+  	$('.info #reqtitle').append("<a id='expander'>Tap to Expand</a>");
+  	$('#cform').append("<input id='submit' type='submit' value='submit' class='submit' />");
+  	$('.bottom_bucket').eq(0).addClass("first");
+
+  	$('html .footer').append("<a id='vdsite'>View Desktop Site</a>");
+  	$("#vdsite").click(function(){
+  		sessionStorage.setItem("mycook", "1");
+  		window.location.href = window.location.href;
+	});
+  	
+  	//THIS FOR PLACEHOLDER JS
+  	if($('.contactform label').each(function(){
+  		var Lplace = $(this).text();
+		$(this).nextAll("input").attr("placeholder", Lplace);
+  	}));
+
+  	
+  	$("#progress #prog_area #prog_left").attr("src", "/siteImages/mobileimages/slider-left.png");
+  	$("#progress #prog_area #prog_right").attr("src", "/siteImages/mobileimages/slider-right.png");
+  	$("#searchform #searchbtn").attr("src", "/siteImages/mobileimages/search.png");
+  	if($(".footer .images a").length > 0){
+  		$("#header").append('<div class="mdsicons">' + $('.footer .images').html() + '</div>');
+  	}
+  	$("#expander").click(function(){
+		$("#contact").animate({height: "show"});
+		$("#expander").css("visibility","hidden");
+	});
+  	
+  	//code for menu slide
+  	$('.mobilemenu').click(function(){
+  		$('#header').animate({right: '0%'});
+  		$('#searchform').animate({right: '0%'});
+  	});
+  	$('.drowclose a').click(function(){
+  		$('#header').animate({right: '-100%'});
+  		$('#searchform').animate({right: '-100%'});
+  	});
+  	//code for acordian 
+  	$('#nav_about').click(function(){
+  		if ($("#nav_about ul").is(":hidden")) {
+  			$("#nav_about").addClass("active");
+  			$("#nav_about ul").slideDown("slow");
+  		} else {
+  			$("#nav_about").removeClass("active");
+  		    $("#nav_about ul").slideUp("slow");
+  		}
+  	});
+  	//WINDOW LOAD FUNCTIONS
+  	$(window).load(function(){
+		if($('#toplinks a').hasClass('highlight')){
+			var htext = $('#toplinks .highlight').text();
+			$('#global_menu .nav_home a').append(':<span>' + htext + '</span>');
+		}
+  	});
+  	
+  	$(".bottom_bucket").each(function() {
+  	    var $this = $(this);
+  	    $this.html($this.html().replace(/&nbsp;/g, ''));
+  	});
+  	
+  	//home acordian 
+  	$('.bottom_bucket .heading').click(function(){
+  		if ($(this).siblings('ul').is(":hidden")) {
+  			$(this).addClass("active");
+  			$(this).siblings('ul').slideDown("slow");
+  		} else {
+  			$(this).removeClass("active");
+  		    $(this).siblings('ul').slideUp("slow");
+  		}
+  	});
+  	
+  //home acordian type2
+  	if($(".bottom_bucket.last .heading").siblings('div').is("#feed-results")){
+  	  	$('.bottom_bucket.last .heading').click(function(){
+  	  		if ($(this).siblings('#feed-results').is(":hidden")) {
+  	  			$(this).addClass("active");
+  	  			$(this).siblings('#feed-results').slideDown("slow");
+  	  		} else {
+  	  			$(this).removeClass("active");
+  	  		    $(this).siblings('#feed-results').slideUp("slow");
+  	  		}
+  	  	});
+  	}
+  	
+  	$(".bottom_bucket").each(function(){
+  		$(this).children("a").eq(2).appendTo($(this).children("ul"));
+  		//$(".bottom_bucket > a").eq(2).remove();
+  	});
+  	
+  	$(".full .add_img_2").eq(0).appendTo($(".full"));
+  	$(".full .add_img_1").eq(0).appendTo($(".full"));
+  	//Products & Services select box and toogle
+  	if($(".listinner .col180").length > 0 ){
+  		$('.twothirds').eq(0).prepend("<h3 class='ps-head'>" + $('.listinner').find("h1").eq(0).text() + "</h3>");
+  		var sel1 = $('.listinner .col180').eq(0).find("h1").text();
+  		var sel2 = $('.listinner .col180').eq(1).find("h1").text();
+  		var sel3 = $('.listinner .col180').eq(2).find("h1").text();
+  		$('.listinner h1').eq(0).append('<select name="cty" id="selectby" ><option value="1" selected="">' + sel1 + '</option><option value="2">' + sel2 + '</option><option value="3">' + sel3 + '</option></select>');
+  		$('.twothirds img').eq(0).hide();
+  	}else{
+		$('.listinner h1').addClass("noabs");
+	}
+  	$('#selectby').change(function() {
+  		if($(".listinner .col180").length > 0 ){
+  		}
+  		$('.col180').hide();
+  		if ($(this).val() === '1') {
+  	    	$('.col180').eq(0).show();
+  	    }else if ($(this).val() === '2') {
+  	    	$('.col180').eq(1).show();
+  	    }else if ($(this).val() === '3') {
+  	    	$('.col180').eq(2).show();
+  	    }
+  	});
+  	rst = 1;
+}
+
+//Home Page Slider image reset
+function desktop_site(){
+	if(rst == 0){
+		return false;
+	}
+	$(".mdsicons").remove();
+	window.location.href = window.location.href;
+	rst = 0;
+}
