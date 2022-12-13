@@ -163,8 +163,8 @@ function getPassword(){
 
      url: "https://pfm-qa-api-asc.aon.net/password/api/values", 
     //  headers: {
-    //      "Authorization": "Basic " + btoa("isachar.yves.silva@aon.com" + ":" + "")
-    //       //"Authorization": "Basic " + btoa("isachar.yves.p.silva@accenture.com" + ":" + "isachar123")
+    //      "Authorization": "Basic " + btoa("" + ":" + "")
+    //       //"Authorization": "Basic " + btoa("" + ":" + "")
     //   },
     type: "POST",
     data : '{"passwordSet":"'+ password+'","url":"'+lastURl+'"}',
